@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    
+
 </head>
 
 <body class="container">
@@ -32,7 +32,7 @@
             <tbody>
             </tbody>
         </table>
-        
+
 </body>
 <script>
     $(document).ready(function() {
@@ -82,8 +82,22 @@
         })
     })
 
-    function refresh(){
+    function refresh() {
+        let urlData = "{{ route('datatables.data') }}";
+        let tableId = '#table';
+        $.getJSON(urlData, null, function(json) {
+            table = $(tableId).dataTable();
+            oSettings = table.fnSettings();
 
+            table.fnClearTable(this);
+
+            for (var i = 0; i < json.aaData.length; i++) {
+                table.oApi._fnAddData(oSettings, json.aaData[i]);
+            }
+
+            oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+            table.fnDraw();
+        });
     }
 
 </script>
